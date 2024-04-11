@@ -11,6 +11,7 @@ import random
 import shutil
 import sys
 import traceback
+import pdb
 
 from benchmark.datasets import DATASETS
 from benchmark.algorithms.definitions import (get_all_definitions, 
@@ -223,11 +224,15 @@ def main():
             filtered_definitions.append(definition)
     definitions = filtered_definitions
 
+
+
     random.shuffle(definitions)
 
     if args.algorithm:
         logger.info(f'running only {args.algorithm}')
         definitions = [d for d in definitions if d.algorithm == args.algorithm]
+
+
 
     if not args.nodocker:
         # See which Docker images we have available
@@ -257,6 +262,8 @@ def main():
         raise Exception('Nothing to run')
     else:
         logger.info(f'Order: {definitions}')
+
+
 
     queue = multiprocessing.Queue()
     for definition in definitions:

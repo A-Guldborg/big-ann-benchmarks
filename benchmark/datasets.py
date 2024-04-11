@@ -180,7 +180,7 @@ class DatasetCompetitionFormat(Dataset):
         if os.path.exists(fn):
             return fn
         else:
-            raise RuntimeError("file not found")
+            raise RuntimeError("file not found: %s" % fn)
 
     def get_dataset_iterator(self, bs=512, split=(1,0)):
         nsplit, rank = split
