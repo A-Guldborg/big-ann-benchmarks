@@ -88,7 +88,7 @@ class Dataset():
 
     def short_name(self):
         return f"{self.__class__.__name__}-{self.nb}"
-    
+
     def __str__(self):
         return (
             f"Dataset {self.__class__.__name__} in dimension {self.d}, with distance {self.distance()}, "
@@ -168,7 +168,7 @@ class DatasetCompetitionFormat(Dataset):
             download(sourceurl, outfile, max_size=file_size)
             # then overwrite the header...
             header = np.memmap(outfile, shape=2, dtype='uint32', mode="r+")
-            
+
             assert header[0] == original_size
             assert header[1] == self.d
             header[0] = self.nb
@@ -201,7 +201,7 @@ class DatasetCompetitionFormat(Dataset):
 
     def search_type(self):
         return "knn"
-    
+
     def data_type(self):
         return "dense"
 
@@ -425,7 +425,7 @@ class MSTuringClustered10M(DatasetCompetitionFormat):
         self.ds_fn = "msturing-10M-clustered.fbin"
         self.qs_fn = "testQuery10K.fbin"
         self.gt_fn = "clu_msturing10M_gt100"
-        
+
         self.base_url = "https://comp21storage.z5.web.core.windows.net/comp23/clustered_data/msturing-10M-clustered/"
         self.basedir = os.path.join(BASEDIR, "MSTuring-10M-clustered")
 
@@ -434,10 +434,10 @@ class MSTuringClustered10M(DatasetCompetitionFormat):
 
     def distance(self):
         return "euclidean"
-    
+
     def prepare(self, skip_data=False, original_size=10 ** 9):
         return super().prepare(skip_data, original_size = self.nb)
-    
+
 class MSTuringClustered30M(DatasetCompetitionFormat):
     def __init__(self):
         self.nb = 29998994
@@ -447,7 +447,7 @@ class MSTuringClustered30M(DatasetCompetitionFormat):
         self.ds_fn = "30M-clustered64.fbin"
         self.qs_fn = "testQuery10K.fbin"
         self.gt_fn = "clu_msturing30M_gt100"
-        
+
         self.base_url = "https://comp21storage.z5.web.core.windows.net/comp23/clustered_data/msturing-30M-clustered/"
         self.basedir = os.path.join(BASEDIR, "MSTuring-30M-clustered")
 
@@ -456,7 +456,7 @@ class MSTuringClustered30M(DatasetCompetitionFormat):
 
     def distance(self):
         return "euclidean"
-    
+
     def prepare(self, skip_data=False, original_size=10 ** 9):
         return super().prepare(skip_data, original_size = self.nb)
 
@@ -516,7 +516,7 @@ class RandomClusteredDS(DatasetCompetitionFormat):
 
     def default_count(self):
         return 10
-    
+
     def prepare(self, skip_data=False, original_size=10 ** 9):
         return super().prepare(skip_data, original_size = self.nb)
 
@@ -636,7 +636,7 @@ class YFCC100MDataset(DatasetCompetitionFormat):
                 self.gt_fn = "GT.public.ibin"
                 self.gt_private_fn = "GT.private.%d.ibin" % private_key
             else:
-                self.gt_fn = "unfiltered.GT.public.ibin"      
+                self.gt_fn = "unfiltered.GT.public.ibin"
 
             self.private_gt_fn = "GT.private.%d.ibin" % private_key
 
@@ -654,7 +654,7 @@ class YFCC100MDataset(DatasetCompetitionFormat):
 
     def prepare(self, skip_data=False):
         super().prepare(skip_data, 10**7)
-        for fn in (self.metadata_base_url, self.metadata_queries_url, 
+        for fn in (self.metadata_base_url, self.metadata_queries_url,
                    self.metadata_private_queries_url):
             if fn:
                 outfile = os.path.join(self.basedir, fn.split("/")[-1])
@@ -668,10 +668,10 @@ class YFCC100MDataset(DatasetCompetitionFormat):
 
     def get_queries_metadata(self):
         return read_sparse_matrix(os.path.join(self.basedir, self.qs_metadata_fn))
-    
+
     def get_private_queries_metadata(self):
         return read_sparse_matrix(os.path.join(self.basedir, self.qs_private_metadata_fn))
-    
+
     def distance(self):
         return "euclidean"
 
@@ -838,13 +838,13 @@ class SparseDataset(DatasetCompetitionFormat):
         x = read_sparse_matrix(_strip_gz(filename), do_mmap=False)  # read the queries file. It is a small file, so no need to mmap
         assert x.shape[0] == self.private_nq
         return x
-    
+
     def distance(self):
         return "ip"
 
     def search_type(self):
         return "knn"
-    
+
     def data_type(self):
         return "sparse"
 
@@ -905,7 +905,7 @@ class RandomDS(DatasetCompetitionFormat):
 
     def default_count(self):
         return 10
-    
+
 
 class RandomFilterDS(RandomDS):
     def __init__(self, nb, nq, d):
@@ -925,14 +925,14 @@ class RandomFilterDS(RandomDS):
             centers=self.nq, random_state=1)
 
         data, queries = sklearn.model_selection.train_test_split(
-            X, test_size=self.nq, random_state=1) 
+            X, test_size=self.nq, random_state=1)
 
         filter1 = [1, 2]
-        filter2 = [3, 4]       
+        filter2 = [3, 4]
 
         assert self.nb % 2 == 0
 
-        # simple filters, first half of the data matches second 
+        # simple filters, first half of the data matches second
         # half of the queries, and vice versa
 
         data_filters = [filter1] * (self.nb // 2) + [filter2] * (self.nb // 2)
@@ -945,7 +945,7 @@ class RandomFilterDS(RandomDS):
             data.astype('float32').tofile(f)
         with open(os.path.join(self.basedir, self.qs_fn), "wb") as f:
             np.array([self.nq, self.d], dtype='uint32').tofile(f)
-            queries.astype('float32').tofile(f) 
+            queries.astype('float32').tofile(f)
 
         data_indices = np.array(data_filters).flatten()
         data_indptr = [2 * i for i in range(self.nb)] + [2 * self.nb]
@@ -957,9 +957,9 @@ class RandomFilterDS(RandomDS):
         query_data = [1] * self.nq * 2
         query_metadata_sparse = csr_matrix((query_data, query_indices, query_indptr))
 
-        write_sparse_matrix(data_metadata_sparse, 
+        write_sparse_matrix(data_metadata_sparse,
                             os.path.join(self.basedir, self.ds_metadata_fn))
-        write_sparse_matrix(query_metadata_sparse, 
+        write_sparse_matrix(query_metadata_sparse,
                             os.path.join(self.basedir, self.qs_metadata_fn))
 
         print("Computing groundtruth")
@@ -985,7 +985,7 @@ class RandomFilterDS(RandomDS):
 
     def get_queries_metadata(self):
         return read_sparse_matrix(os.path.join(self.basedir, self.qs_metadata_fn))
-    
+
     def search_type(self):
         return "knn_filtered"
 
@@ -1121,7 +1121,7 @@ DATASETS = {
 
     'sparse-small': lambda: SparseDataset("small"),
     'sparse-1M': lambda: SparseDataset("1M"),
-    'sparse-full': lambda: SparseDataset("full"), 
+    'sparse-full': lambda: SparseDataset("full"),
 
     'random-xs': lambda : RandomDS(10000, 1000, 20),
     'random-s': lambda : RandomDS(100000, 1000, 50),
