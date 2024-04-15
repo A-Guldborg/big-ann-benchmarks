@@ -8,3 +8,15 @@ random-filter-s:
         base:
           args: |
             [{"indexkey": "IVF1024,SQ8"}]
+          query-args: |
+            [
+              {
+                "nprobe": 10
+              },
+              {
+                "nprobe": 15
+              },
+              {
+                "nprobe": 20
+              }
+            ]

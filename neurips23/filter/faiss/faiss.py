@@ -248,6 +248,9 @@ class FAISS(BaseFilterANN):
                     X[q:q+1], k, params=params
                 )
                 Ii = Ii.ravel()
+
+                # print("II")
+                # print(Ii % self.binsig.id_mask)
                 if self.binsig is None:
                     self.I[q] = Ii
                 else:
@@ -255,6 +258,7 @@ class FAISS(BaseFilterANN):
                     # valid = Ii != -1
                     # I[q, valid] = Ii[valid] & binsig.id_mask
                     self.I[q] = Ii & self.binsig.id_mask
+                    
 
 
         if self.nt <= 1:
@@ -266,6 +270,8 @@ class FAISS(BaseFilterANN):
             list(pool.map(process_one_row, range(nq)))
 
     def get_results(self):
+        # print("FAISS RESULTS")
+        # print(self.I)
         return self.I
 
     def set_query_arguments(self, query_args):
