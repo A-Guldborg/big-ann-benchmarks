@@ -113,13 +113,13 @@ class FALCONN(BaseFilterANN):
         filter_size_threshold = int(SMALL_LABEL_THRESHOLD * self.dataset_metadata.shape[0])
 
         small_labels = {}
-        print(len(inverse_metadata))
-        for k,v in inverse_metadata.items():
+        print(len(self.inverse_metadata))
+        for k,v in self.inverse_metadata.items():
             if(len(v) <= filter_size_threshold):
                 small_labels[k] = v
 
         print(len(small_labels))
-        table.setup(self.dataset, metadata_dic, small_labels)
+        table.setup(self.dataset, self.metadata_dic, small_labels)
         t2 = timeit.default_timer()
         print('Done')
         print('Construction time: {}'.format(t2 - t1))
