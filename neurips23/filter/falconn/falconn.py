@@ -64,6 +64,7 @@ class FALCONN(BaseFilterANN):
                         inverse_metadata[int(filter_idx)].append(i)
                         metadata_dic[i].add(int(filter_idx))
                     i += 1
+            print("METADATA PROGRESS FOR WORKER ", worker_id, ": 100%", sep="")
 
 
         threads = 8
@@ -109,6 +110,7 @@ class FALCONN(BaseFilterANN):
         filter_size_threshold = int(SMALL_LABEL_THRESHOLD * self.dataset_metadata.shape[0])
 
         small_labels = {}
+        print(len(inverse_metadata))
         for k,v in inverse_metadata.items():
             if(len(v) <= filter_size_threshold):
                 small_labels[k] = v
