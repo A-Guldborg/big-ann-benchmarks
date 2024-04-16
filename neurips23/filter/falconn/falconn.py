@@ -16,6 +16,9 @@ from benchmark.datasets import DATASETS
 from neurips23.filter.base import BaseFilterANN
 
 
+metadata_dic = defaultdict(set)
+inverse_metadata = defaultdict(list)
+
 
 
 class FALCONN(BaseFilterANN):
@@ -47,8 +50,6 @@ class FALCONN(BaseFilterANN):
         # self.dataset /= np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
         self.dataset_metadata = ds.get_dataset_metadata()
 
-        metadata_dic = defaultdict(set)
-        inverse_metadata = defaultdict(list)
         # breakpoint()
         # metadata = dict(dataset_metadata.tolil().items())
 
