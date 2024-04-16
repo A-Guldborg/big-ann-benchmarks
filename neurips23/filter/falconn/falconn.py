@@ -52,19 +52,22 @@ class FALCONN(BaseFilterANN):
         # breakpoint()
         # metadata = dict(dataset_metadata.tolil().items())
 
-        def process_metadata(metadata_slice, start):
+        def process_metadata(metadata_slice, start, worker_id):
             i = start
+            increments = (metadata_slice.shape[0] // 10)
             for point in metadata_slice:
-                    if (i % 100000 == 0):
-                        print("METADATA PROGRESS", i)
+                    if (i % increments == 0):
+                        print("METADATA PROGRESS FOR WORKER ", worker_id, ": ", (i//increments) * 10, "%", sep="")
                     for filter_idx in point.indices:
                         inverse_metadata[int(filter_idx)].append(i)
                         metadata_dic[i].add(int(filter_idx))
                     i += 1
 
 
-        workers = [multiprocessing.Process(target=process_metadata, args=(self.dataset_metadata[1250000 * i:1250000 * (i+1)], 1250000 * i))
-               for i in range(8)]
+        threads = 8
+        workload = self.dataset_metadata.shape[0] // threads
+        workers = [multiprocessing.Process(target=process_metadata, args=(self.dataset_metadata[workload * i:workload * (i+1)], workload * i))
+               for i in range(threads)]
 
         [worker.start() for worker in workers]
         [worker.join() for worker in workers]
@@ -100,7 +103,7 @@ class FALCONN(BaseFilterANN):
         table = falconn.LSHIndex(params_cp)
 
 
-        SMALL_LABEL_THRESHOLD = 0.0001
+        SMALL_LABEL_THRESHOLD = 0.6
         filter_size_threshold = int(SMALL_LABEL_THRESHOLD * self.dataset_metadata.shape[0])
 
         small_labels = {}
