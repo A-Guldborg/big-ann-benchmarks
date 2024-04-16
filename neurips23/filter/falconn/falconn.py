@@ -16,8 +16,6 @@ from benchmark.datasets import DATASETS
 from neurips23.filter.base import BaseFilterANN
 
 
-metadata_dic = defaultdict(set)
-inverse_metadata = defaultdict(list)
 
 
 
@@ -49,6 +47,8 @@ class FALCONN(BaseFilterANN):
         self.dataset = ds.get_memmap_dataset()
         # self.dataset /= np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
         self.dataset_metadata = ds.get_dataset_metadata()
+        self.metadata_dic = defaultdict(set)
+        self.inverse_metadata = defaultdict(list)
 
         # breakpoint()
         # metadata = dict(dataset_metadata.tolil().items())
@@ -56,20 +56,18 @@ class FALCONN(BaseFilterANN):
         def process_metadata(metadata_slice, start, worker_id):
             i = start
             increments = (metadata_slice.shape[0] // 10)
-            global metadata_dic
-            global inverse_metadata
             print("METADATA SLICE SIZE: ", metadata_slice.shape[0])
             print("METADATA INCREMENTS: ", increments)
             for point in metadata_slice:
                     if ((i-start) % increments == 0):
                         print("METADATA PROGRESS FOR WORKER ", worker_id, ": ", ((i-start)/increments) * 10, "%", sep="")
-                        print("Inverse Metadata Size, on worker ", worker_id, ": ", len(inverse_metadata), sep="", end="\n\n")
+                        print("Inverse Metadata Size, on worker ", worker_id, ": ", len(self.inverse_metadata), sep="", end="\n\n")
                     for filter_idx in point.indices:
-                        inverse_metadata[int(filter_idx)].append(i)
-                        metadata_dic[i].add(int(filter_idx))
+                        self.inverse_metadata[int(filter_idx)].append(i)
+                        self.metadata_dic[i].add(int(filter_idx))
                     i += 1
             print("METADATA PROGRESS FOR WORKER ", worker_id, ": 100%", sep="")
-            print("Inverse metadata keys are: ", ", ".join(str(x) for x in inverse_metadata.keys()), sep="")
+            print("Inverse metadata keys are: ", ", ".join(str(x) for x in self.inverse_metadata.keys()), sep="")
 
 
         threads = 8
