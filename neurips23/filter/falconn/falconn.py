@@ -49,6 +49,9 @@ class FALCONN(BaseFilterANN):
         # metadata = dict(dataset_metadata.tolil().items())
 
         for idx, el in dict(self.dataset_metadata.todok().items()).keys():
+            if (idx % 100000 == 0):
+                print("metadata PROGRESS")
+                print(idx)
             metadata_dic[idx].add(el)
             inverse_metadata[el].add(idx)
 
@@ -61,7 +64,7 @@ class FALCONN(BaseFilterANN):
         params_cp.dimension = len(self.dataset[0])
         params_cp.lsh_family = falconn.LSHFamily.CrossPolytope
         params_cp.distance_function = falconn.DistanceFunction.EuclideanSquared
-        params_cp.l = 10
+        params_cp.l = 1
         # we set one rotation, since the data is dense enough,
         # for sparse data set it to 2
         params_cp.num_rotations = 1

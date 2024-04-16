@@ -34,11 +34,5 @@ yfcc-10M:
             [
               {
                 "nprobe": 50
-              },
-              {
-                "nprobe": 75
-              },
-              {
-                "nprobe": 100
               }
             ]
