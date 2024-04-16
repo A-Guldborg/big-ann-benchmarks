@@ -674,7 +674,7 @@ class YFCC100MDataset(DatasetCompetitionFormat):
 
     def get_memmap_dataset(self):
         dtype = "float32"
-        dataset_file = os.path.join(self.basedir, self.ds_fn)
+        dataset_file = self.get_dataset_fn()
         n, d = map(int, np.fromfile(dataset_file, dtype="uint32", count=2))
 
         return np.memmap(dataset_file, dtype=dtype, mode="r+", offset=8, shape=(n, d))
