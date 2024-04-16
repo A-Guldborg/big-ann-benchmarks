@@ -180,7 +180,7 @@ class DatasetCompetitionFormat(Dataset):
         if os.path.exists(fn):
             return fn
         else:
-            raise RuntimeError("file not found")
+            raise RuntimeError("file not found: %s" % fn)
 
     def get_dataset_iterator(self, bs=512, split=(1,0)):
         nsplit, rank = split
@@ -672,6 +672,13 @@ class YFCC100MDataset(DatasetCompetitionFormat):
     def get_private_queries_metadata(self):
         return read_sparse_matrix(os.path.join(self.basedir, self.qs_private_metadata_fn))
 
+    def get_memmap_dataset(self):
+        dtype = "float32"
+        dataset_file = self.get_dataset_fn()
+        n, d = map(int, np.fromfile(dataset_file, dtype="uint32", count=2))
+
+        return np.memmap(dataset_file, dtype=dtype, mode="r+", offset=8, shape=(n, d))
+
     def distance(self):
         return "euclidean"
 
@@ -980,11 +987,18 @@ class RandomFilterDS(RandomDS):
             I.astype('uint32').tofile(f)
             D.astype('float32').tofile(f)
 
-    def get_dataset_metadata(self):
-        return read_sparse_matrix(os.path.join(self.basedir, self.ds_metadata_fn))
+    def get_dataset_metadata(self, do_mmap=False):
+        return read_sparse_matrix(os.path.join(self.basedir, self.ds_metadata_fn), do_mmap)
 
     def get_queries_metadata(self):
         return read_sparse_matrix(os.path.join(self.basedir, self.qs_metadata_fn))
+
+    def get_memmap_dataset(self):
+        dtype = "float32"
+        dataset_file = os.path.join(self.basedir, self.ds_fn)
+        n, d = map(int, np.fromfile(dataset_file, dtype="uint32", count=2))
+
+        return np.memmap(dataset_file, dtype=dtype, mode="r+", offset=8, shape=(n, d))
 
     def search_type(self):
         return "knn_filtered"
