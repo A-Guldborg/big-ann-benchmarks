@@ -44,16 +44,18 @@ class FALCONN(BaseFilterANN):
         self.dataset_metadata = ds.get_dataset_metadata()
 
         metadata_dic = defaultdict(lambda: set())
+        inverse_metadata = defaultdict(lambda: set())
         # breakpoint()
         # metadata = dict(dataset_metadata.tolil().items())
-        
+
         for idx, el in dict(self.dataset_metadata.todok().items()).keys():
             metadata_dic[idx].add(el)
+            inverse_metadata[el].add(idx)
 
         center = np.mean(self.dataset, axis=0)
         self.center = center
         self.dataset -= center
-        
+
 
         params_cp = falconn.LSHConstructionParameters()
         params_cp.dimension = len(self.dataset[0])
@@ -75,7 +77,14 @@ class FALCONN(BaseFilterANN):
         print('Constructing the LSH table')
         t1 = timeit.default_timer()
         table = falconn.LSHIndex(params_cp)
-        table.setup(self.dataset, metadata_dic)
+
+
+        SMALL_LABEL_THRESHOLD = 0.0001
+        filter_size_threshold = int(SMALL_LABEL_THRESHOLD * self.dataset_metadata.shape[0])
+
+        small_labels = filter(lambda x: len(x) <= filter_size_threshold, inverse_metadata.keys())
+
+        table.setup(self.dataset, metadata_dic, small_labels)
         t2 = timeit.default_timer()
         print('Done')
         print('Construction time: {}'.format(t2 - t1))

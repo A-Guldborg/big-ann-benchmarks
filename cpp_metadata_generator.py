@@ -19,8 +19,8 @@ for point in b:
 print("Done reading metadata")
 f = open("yfcc10m.foennindex", "w")
 f.write("#include <unordered_map>\n")
-f.write("#include <unordered_set>\n\n")
-f.write("std::unordered_map<int, std::unordered_set<int>> small_labels =\n")
+f.write("#include <vector>\n\n")
+f.write("std::unordered_map<int, std::vector<int>> small_labels =\n")
 f.write("{\n")
 
 for k,v in metadata.items():
