@@ -82,7 +82,10 @@ class FALCONN(BaseFilterANN):
         SMALL_LABEL_THRESHOLD = 0.0001
         filter_size_threshold = int(SMALL_LABEL_THRESHOLD * self.dataset_metadata.shape[0])
 
-        small_labels = dict(filter(lambda x : len(x) <= filter_size_threshold, inverse_metadata.values()))
+        small_labels = {}
+        for k,v in inverse_metadata.items():
+            if(len(v) <= filter_size_threshold):
+                small_labels[k] = v
 
         print(len(small_labels))
         table.setup(self.dataset, metadata_dic, small_labels)
