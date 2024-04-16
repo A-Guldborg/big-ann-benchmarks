@@ -114,7 +114,7 @@ class FALCONN(BaseFilterANN):
         table = falconn.LSHIndex(params_cp)
 
 
-        SMALL_LABEL_THRESHOLD = 0.6
+        SMALL_LABEL_THRESHOLD = 0.0001
         filter_size_threshold = int(SMALL_LABEL_THRESHOLD * self.dataset_metadata.shape[0])
 
         small_labels = {}
