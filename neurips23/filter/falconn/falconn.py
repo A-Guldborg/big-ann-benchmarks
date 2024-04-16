@@ -66,7 +66,7 @@ class FALCONN(BaseFilterANN):
 
         threads = 8
         workload = self.dataset_metadata.shape[0] // threads
-        workers = [multiprocessing.Process(target=process_metadata, args=(self.dataset_metadata[workload * i:workload * (i+1)], workload * i))
+        workers = [multiprocessing.Process(target=process_metadata, args=(self.dataset_metadata[workload * i:workload * (i+1)], workload * i, i))
                for i in range(threads)]
 
         [worker.start() for worker in workers]
