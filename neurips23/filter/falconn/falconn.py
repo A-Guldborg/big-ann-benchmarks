@@ -43,17 +43,22 @@ class FALCONN(BaseFilterANN):
         # self.dataset /= np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
         self.dataset_metadata = ds.get_dataset_metadata()
 
-        metadata_dic = defaultdict(lambda: set())
-        inverse_metadata = defaultdict(lambda: set())
+        metadata_dic = defaultdict(set)
+        inverse_metadata = defaultdict(list)
         # breakpoint()
         # metadata = dict(dataset_metadata.tolil().items())
 
-        for idx, el in dict(self.dataset_metadata.todok().items()).keys():
-            if (idx % 100000 == 0):
-                print("metadata PROGRESS")
-                print(idx)
-            metadata_dic[idx].add(el)
-            inverse_metadata[el].add(idx)
+        i = 0
+        for point in self.dataset_metadata:
+            if (i % 100000 == 0):
+                print("METADATA PROGRESS", i)
+            for filter_idx in point.indices:
+                inverse_metadata[int(filter_idx)].append(i)
+                metadata_dic[i].add(int(filter_idx))
+            i += 1
+        # for idx, el in dict(self.dataset_metadata.todok().items()).keys():
+        #     metadata_dic[idx].add(el)
+        #     inverse_metadata[el].add(idx)
 
         center = np.mean(self.dataset, axis=0)
         self.center = center
