@@ -66,6 +66,7 @@ class FALCONN(BaseFilterANN):
                         metadata_dic[i].add(int(filter_idx))
                     i += 1
             print("METADATA PROGRESS FOR WORKER ", worker_id, ": 100%", sep="")
+            print("Inverse metadata keys are: ", ", ".join(str(x) for x in inverse_metadata.keys()), sep="")
 
 
         threads = 8
