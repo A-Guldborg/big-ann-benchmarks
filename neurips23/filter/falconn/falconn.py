@@ -6,7 +6,7 @@ import timeit
 from collections import defaultdict
 from functools import lru_cache
 
-import threading
+import multiprocessing
 
 import falconn
 import numpy as np
@@ -63,32 +63,12 @@ class FALCONN(BaseFilterANN):
                     i += 1
 
 
-        t1 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[:1250000], 0))
-        t2 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[1250000:2500000], 1250000))
-        t3 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[2500000:3750000], 2500000))
-        t4 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[3750000:5000000], 3750000))
-        t5 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[5000000:6250000], 5000000))
-        t6 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[6250000:7500000], 6250000))
-        t7 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[7500000:8750000], 7500000))
-        t8 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[8750000:], 8750000))
+        workers = [multiprocessing.Process(target=process_metadata, args=(self.dataset_metadata[1250000 * i:1250000 * (i+1)], 1250000 * i))
+               for i in range(8)]
 
-        t1.start()
-        t2.start()
-        t3.start()
-        t4.start()
-        t5.start()
-        t6.start()
-        t7.start()
-        t8.start()
+        [worker.start() for worker in workers]
+        [worker.join() for worker in workers]
 
-        t1.join()
-        t2.join()
-        t3.join()
-        t4.join()
-        t5.join()
-        t6.join()
-        t7.join()
-        t8.join()
         # for idx, el in dict(self.dataset_metadata.todok().items()).keys():
         #     metadata_dic[idx].add(el)
         #     inverse_metadata[el].add(idx)
