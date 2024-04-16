@@ -53,30 +53,35 @@ class FALCONN(BaseFilterANN):
         # breakpoint()
         # metadata = dict(dataset_metadata.tolil().items())
 
-        def process_metadata(metadata_slice, start, worker_id):
-            i = start
-            increments = (metadata_slice.shape[0] // 10)
-            print("METADATA SLICE SIZE: ", metadata_slice.shape[0])
-            print("METADATA INCREMENTS: ", increments)
-            for point in metadata_slice:
-                    if ((i-start) % increments == 0):
-                        print("METADATA PROGRESS FOR WORKER ", worker_id, ": ", ((i-start)/increments) * 10, "%", sep="")
-                        print("Inverse Metadata Size, on worker ", worker_id, ": ", len(self.inverse_metadata), sep="", end="\n\n")
-                    for filter_idx in point.indices:
-                        self.inverse_metadata[int(filter_idx)].append(i)
-                        self.metadata_dic[i].add(int(filter_idx))
-                    i += 1
-            print("METADATA PROGRESS FOR WORKER ", worker_id, ": 100%", sep="")
-            print("Inverse metadata keys are: ", ", ".join(str(x) for x in self.inverse_metadata.keys()), sep="")
+        metadata_slice = self.dataset_metadata
+        start = 0
+        worker_id = 0
+
+        # def process_metadata(metadata_slice, start, worker_id):
+
+        i = start
+        increments = (metadata_slice.shape[0] // 10)
+        print("METADATA SLICE SIZE: ", metadata_slice.shape[0])
+        print("METADATA INCREMENTS: ", increments)
+        for point in metadata_slice:
+                if ((i-start) % increments == 0):
+                    print("METADATA PROGRESS FOR WORKER ", worker_id, ": ", ((i-start)/increments) * 10, "%", sep="")
+                    print("Inverse Metadata Size, on worker ", worker_id, ": ", len(self.inverse_metadata), sep="", end="\n\n")
+                for filter_idx in point.indices:
+                    self.inverse_metadata[int(filter_idx)].append(i)
+                    self.metadata_dic[i].add(int(filter_idx))
+                i += 1
+        print("METADATA PROGRESS FOR WORKER ", worker_id, ": 100%", sep="")
+        print("Inverse metadata keys are: ", ", ".join(str(x) for x in self.inverse_metadata.keys()), sep="")
 
 
-        threads = 8
-        workload = self.dataset_metadata.shape[0] // threads
-        workers = [multiprocessing.Process(target=process_metadata, args=(self.dataset_metadata[workload * i:workload * (i+1)], workload * i, i))
-               for i in range(threads)]
+        # threads = 8
+        # workload = self.dataset_metadata.shape[0] // threads
+        # workers = [multiprocessing.Process(target=process_metadata, args=(self.dataset_metadata[workload * i:workload * (i+1)], workload * i, i))
+        #        for i in range(threads)]
 
-        [worker.start() for worker in workers]
-        [worker.join() for worker in workers]
+        # [worker.start() for worker in workers]
+        # [worker.join() for worker in workers]
 
         # for idx, el in dict(self.dataset_metadata.todok().items()).keys():
         #     metadata_dic[idx].add(el)
