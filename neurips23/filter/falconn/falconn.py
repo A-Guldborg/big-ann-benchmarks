@@ -52,7 +52,7 @@ class FALCONN(BaseFilterANN):
         # breakpoint()
         # metadata = dict(dataset_metadata.tolil().items())
 
-        def process_metadata(metadata_slice, start, worker_id):
+        def process_metadata(metadata_slice, start, worker_id, metadata_dic=metadata_dic, inverse_metadata=inverse_metadata):
             i = start
             increments = (metadata_slice.shape[0] // 10)
             print("METADATA SLICE SIZE: ", metadata_slice.shape[0])
@@ -69,7 +69,7 @@ class FALCONN(BaseFilterANN):
 
         threads = 8
         workload = self.dataset_metadata.shape[0] // threads
-        workers = [multiprocessing.Process(target=process_metadata, args=(self.dataset_metadata[workload * i:workload * (i+1)], workload * i, i))
+        workers = [multiprocessing.Process(target=process_metadata, args=(self.dataset_metadata[workload * i:workload * (i+1)], workload * i, i, metadata_dic, inverse_metadata))
                for i in range(threads)]
 
         [worker.start() for worker in workers]
