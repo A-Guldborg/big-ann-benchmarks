@@ -60,7 +60,7 @@ class FALCONN(BaseFilterANN):
             for point in metadata_slice:
                     if ((i-start) % increments == 0):
                         print("METADATA PROGRESS FOR WORKER ", worker_id, ": ", ((i-start)/increments) * 10, "%", sep="")
-                        print("Inverse Metadata Size, on worker ", worker_id, +": ", len(inverse_metadata), sep="")
+                        print("Inverse Metadata Size, on worker ", worker_id, ": ", len(inverse_metadata), sep="")
                     for filter_idx in point.indices:
                         inverse_metadata[int(filter_idx)].append(i)
                         metadata_dic[i].add(int(filter_idx))
