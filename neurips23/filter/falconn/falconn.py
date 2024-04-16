@@ -6,12 +6,16 @@ import timeit
 from collections import defaultdict
 from functools import lru_cache
 
+import threading
+
 import falconn
 import numpy as np
 from scipy.sparse import csr_matrix
 
 from benchmark.datasets import DATASETS
 from neurips23.filter.base import BaseFilterANN
+
+
 
 
 class FALCONN(BaseFilterANN):
@@ -48,14 +52,43 @@ class FALCONN(BaseFilterANN):
         # breakpoint()
         # metadata = dict(dataset_metadata.tolil().items())
 
-        i = 0
-        for point in self.dataset_metadata:
-            if (i % 100000 == 0):
-                print("METADATA PROGRESS", i)
-            for filter_idx in point.indices:
-                inverse_metadata[int(filter_idx)].append(i)
-                metadata_dic[i].add(int(filter_idx))
-            i += 1
+        def process_metadata(metadata_slice, start):
+            i = start
+            for point in metadata_slice:
+                    if (i % 100000 == 0):
+                        print("METADATA PROGRESS", i)
+                    for filter_idx in point.indices:
+                        inverse_metadata[int(filter_idx)].append(i)
+                        metadata_dic[i].add(int(filter_idx))
+                    i += 1
+
+
+        t1 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[:1250000], 0))
+        t2 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[1250000:2500000], 1250000))
+        t3 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[2500000:3750000], 2500000))
+        t4 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[3750000:5000000], 3750000))
+        t5 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[5000000:6250000], 5000000))
+        t6 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[6250000:7500000], 6250000))
+        t7 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[7500000:8750000], 7500000))
+        t8 = threading.Thread(target=process_metadata, args=(self.dataset_metadata[8750000:], 8750000))
+
+        t1.start()
+        t2.start()
+        t3.start()
+        t4.start()
+        t5.start()
+        t6.start()
+        t7.start()
+        t8.start()
+
+        t1.join()
+        t2.join()
+        t3.join()
+        t4.join()
+        t5.join()
+        t6.join()
+        t7.join()
+        t8.join()
         # for idx, el in dict(self.dataset_metadata.todok().items()).keys():
         #     metadata_dic[idx].add(el)
         #     inverse_metadata[el].add(idx)
