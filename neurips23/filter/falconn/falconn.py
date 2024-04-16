@@ -54,7 +54,7 @@ class FALCONN(BaseFilterANN):
 
         center = np.mean(self.dataset, axis=0)
         self.center = center
-        self.dataset -= center
+        # self.dataset -= center
 
 
         params_cp = falconn.LSHConstructionParameters()
