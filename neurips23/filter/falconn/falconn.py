@@ -55,6 +55,8 @@ class FALCONN(BaseFilterANN):
         def process_metadata(metadata_slice, start, worker_id):
             i = start
             increments = (metadata_slice.shape[0] // 10)
+            global metadata_dic
+            global inverse_metadata
             print("METADATA SLICE SIZE: ", metadata_slice.shape[0])
             print("METADATA INCREMENTS: ", increments)
             for point in metadata_slice:
