@@ -45,44 +45,49 @@ class FALCONN(BaseFilterANN):
     def load_index(self, dataset):
         ds = DATASETS[dataset]()
         self.dataset = ds.get_dataset()
+        manager = multiprocessing.Manager()
         self.dataset.astype(np.float32)
         # self.dataset /= np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
-        self.dataset_metadata = ds.get_dataset_metadata()
-        self.metadata_dic = defaultdict(set)
-        self.inverse_metadata = defaultdict(list)
+        dataset_metadata = ds.get_dataset_metadata()
+        metadata_dic = manager.dict()
+        inverse_metadata = manager.dict()
 
         # breakpoint()
         # metadata = dict(dataset_metadata.tolil().items())
 
-        metadata_slice = self.dataset_metadata
-        start = 0
-        worker_id = 0
+        # metadata_slice = dataset_metadata
+        # start = 0
+        # worker_id = 0
 
-        # def process_metadata(metadata_slice, start, worker_id):
+        def process_metadata(metadata_slice, start, worker_id, inverse_metadata, metadata_dic):
+            i = start
+            increments = (metadata_slice.shape[0] // 10)
+            print("METADATA SLICE SIZE: ", metadata_slice.shape[0])
+            print("METADATA INCREMENTS: ", increments)
+            for point in metadata_slice:
+                    if ((i-start) % increments == 0):
+                        print("METADATA PROGRESS FOR WORKER ", worker_id, ": ", ((i-start)/increments) * 10, "%", sep="")
+                        print("Inverse Metadata Size, on worker ", worker_id, ": ", len(inverse_metadata), sep="", end="\n\n")
+                    for filter_idx in point.indices:
+                        int_filter_idx = int(filter_idx)
+                        if int_filter_idx not in inverse_metadata:
+                            inverse_metadata[int_filter_idx] = list()
+                        inverse_metadata[int(filter_idx)].append(i)
+                        if i not in metadata_dic:
+                            metadata_dic[i] = set()
+                        metadata_dic[i].add(int(filter_idx))
+                    i += 1
+            print("METADATA PROGRESS FOR WORKER ", worker_id, ": 100%", sep="")
 
-        i = start
-        increments = (metadata_slice.shape[0] // 10)
-        print("METADATA SLICE SIZE: ", metadata_slice.shape[0])
-        print("METADATA INCREMENTS: ", increments)
-        for point in metadata_slice:
-                if ((i-start) % increments == 0):
-                    print("METADATA PROGRESS FOR WORKER ", worker_id, ": ", ((i-start)/increments) * 10, "%", sep="")
-                    print("Inverse Metadata Size, on worker ", worker_id, ": ", len(self.inverse_metadata), sep="", end="\n\n")
-                for filter_idx in point.indices:
-                    self.inverse_metadata[int(filter_idx)].append(i)
-                    self.metadata_dic[i].add(int(filter_idx))
-                i += 1
-        print("METADATA PROGRESS FOR WORKER ", worker_id, ": 100%", sep="")
-        print("Inverse metadata keys are: ", ", ".join(str(x) for x in self.inverse_metadata.keys()), sep="")
 
+        threads = 8
+        workload = dataset_metadata.shape[0] // threads
+        workers = [multiprocessing.Process(target=process_metadata, args=(dataset_metadata[workload * i:workload * (i+1)], workload * i, i, inverse_metadata, metadata_dic))
+               for i in range(threads)]
 
-        # threads = 8
-        # workload = self.dataset_metadata.shape[0] // threads
-        # workers = [multiprocessing.Process(target=process_metadata, args=(self.dataset_metadata[workload * i:workload * (i+1)], workload * i, i))
-        #        for i in range(threads)]
+        [worker.start() for worker in workers]
+        [worker.join() for worker in workers]
 
-        # [worker.start() for worker in workers]
-        # [worker.join() for worker in workers]
 
         # for idx, el in dict(self.dataset_metadata.todok().items()).keys():
         #     metadata_dic[idx].add(el)
