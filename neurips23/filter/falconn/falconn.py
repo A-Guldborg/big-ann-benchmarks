@@ -87,8 +87,8 @@ class FALCONN(BaseFilterANN):
         #     metadata_dic[idx].add(el)
         #     inverse_metadata[el].add(idx)
 
-        center = np.mean(self.dataset, axis=0)
-        self.center = center
+        # center = np.mean(self.dataset, axis=0)
+        # self.center = center
         # self.dataset -= center
 
 
