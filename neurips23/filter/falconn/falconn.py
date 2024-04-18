@@ -33,7 +33,7 @@ class FALCONN(BaseFilterANN):
         for (i, query) in enumerate(X):
             if i % 10 == 0:
                 print("QUERY", i)
-            query = query.astype(np.float32)
+            # query = query.astype(np.float32)
             res = self.query_object.find_nearest_neighbor(query, filters[i].indices)
             self.I[i] = res
 
@@ -46,16 +46,16 @@ class FALCONN(BaseFilterANN):
         ds = DATASETS[dataset]()
         self.dataset = ds.get_dataset()
         # manager = multiprocessing.Manager()
-        self.dataset = self.dataset.astype(np.float32)
+        # self.dataset = self.dataset.astype(np.float32)
         # self.dataset /= np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
-        dataset_metadata = ds.get_dataset_metadata()
+        self.dataset_metadata = ds.get_dataset_metadata()
         metadata_dic = defaultdict(set)
         inverse_metadata = defaultdict(list)
 
         # breakpoint()
         # metadata = dict(dataset_metadata.tolil().items())
 
-        metadata_slice = dataset_metadata
+        metadata_slice = self.dataset_metadata
         start = 0
         worker_id = 0
 
@@ -77,7 +77,7 @@ class FALCONN(BaseFilterANN):
                     #     metadata_dic[i] = set()
                     metadata_dic[i].add(int_filter_idx)
                 i += 1
-            # print("METADATA PROGRESS FOR WORKER ", worker_id, ": 100%", sep="")
+        print("METADATA PROGRESS FOR WORKER ", worker_id, ": 100%", sep="")
 
 
         # threads = 8
@@ -102,7 +102,7 @@ class FALCONN(BaseFilterANN):
         params_cp.dimension = len(self.dataset[0])
         params_cp.lsh_family = falconn.LSHFamily.CrossPolytope
         params_cp.distance_function = falconn.DistanceFunction.EuclideanSquared
-        params_cp.l = 1
+        params_cp.l = 50
         # we set one rotation, since the data is dense enough,
         # for sparse data set it to 2
         params_cp.num_rotations = 1
@@ -124,13 +124,13 @@ class FALCONN(BaseFilterANN):
         filter_size_threshold = int(SMALL_LABEL_THRESHOLD * self.dataset_metadata.shape[0])
 
         small_labels = {}
-        print(len(self.inverse_metadata))
-        for k,v in self.inverse_metadata.items():
+        # print(len(self.inverse_metadata))
+        for k,v in inverse_metadata.items():
             if(len(v) <= filter_size_threshold):
                 small_labels[k] = v
 
         print(len(small_labels))
-        table.setup(dataset, metadata_dic, small_labels)
+        table.setup(self.dataset, metadata_dic, small_labels)
         t2 = timeit.default_timer()
         print('Done')
         print('Construction time: {}'.format(t2 - t1))
