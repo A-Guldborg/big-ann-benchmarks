@@ -44,7 +44,8 @@ class FALCONN(BaseFilterANN):
 
     def load_index(self, dataset):
         ds = DATASETS[dataset]()
-        self.dataset = ds.get_memmap_dataset()
+        self.dataset = ds.get_dataset()
+        self.dataset.astype(np.float32)
         # self.dataset /= np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
         self.dataset_metadata = ds.get_dataset_metadata()
         self.metadata_dic = defaultdict(set)
