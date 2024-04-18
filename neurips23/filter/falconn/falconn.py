@@ -25,12 +25,12 @@ class FALCONN(BaseFilterANN):
         self.index_params = index_params
 
     def filtered_query(self, X, filters, k):
-        # self.X -= self.center
+        self.X = X - self.center
         # print("filtered")
         # print(X)
-        nq = X.shape[0]
+        nq = self.X.shape[0]
         self.I = -np.ones((nq, k), dtype='int32')
-        for (i, query) in enumerate(X):
+        for (i, query) in enumerate(self.X):
             if i % 10 == 0:
                 print("QUERY", i)
             # query = query.astype(np.float32)
@@ -47,7 +47,7 @@ class FALCONN(BaseFilterANN):
         self.dataset = ds.get_dataset()
         # manager = multiprocessing.Manager()
         # self.dataset = self.dataset.astype(np.float32)
-        # self.dataset /= np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
+        self.dataset = self.dataset / np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
         self.dataset_metadata = ds.get_dataset_metadata()
         metadata_dic = defaultdict(list)
         inverse_metadata = defaultdict(list)
@@ -72,7 +72,7 @@ class FALCONN(BaseFilterANN):
                     int_filter_idx = int(filter_idx)
                     # if int_filter_idx not in inverse_metadata:
                     #     inverse_metadata[int_filter_idx] = list()
-                    # inverse_metadata[int(filter_idx)].append(i)
+                    inverse_metadata[int(filter_idx)].append(i)
                     # if i not in metadata_dic:
                     #     metadata_dic[i] = set()
                     metadata_dic[i].append(int_filter_idx)
@@ -93,9 +93,9 @@ class FALCONN(BaseFilterANN):
         #     metadata_dic[idx].add(el)
         #     inverse_metadata[el].add(idx)
 
-        # center = np.mean(self.dataset, axis=0)
-        # self.center = center
-        # self.dataset -= center
+        center = np.mean(self.dataset, axis=0)
+        self.center = center
+        self.dataset -= center
 
 
         params_cp = falconn.LSHConstructionParameters()
@@ -113,7 +113,7 @@ class FALCONN(BaseFilterANN):
         # we build 18-bit hashes so that each table has
         # 2^18 bins; this is a good choise since 2^18 is of the same
         # order of magnitude as the number of data points
-        falconn.compute_number_of_hash_functions(18, params_cp)
+        falconn.compute_number_of_hash_functions(24, params_cp)
 
         print('Constructing the LSH table')
         t1 = timeit.default_timer()
