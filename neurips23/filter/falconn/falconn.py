@@ -31,9 +31,9 @@ class FALCONN(BaseFilterANN):
         nq = X.shape[0]
         self.I = -np.ones((nq, k), dtype='int32')
         for (i, query) in enumerate(X):
-            # if i % 100 == 0:
-            #     print("QUERY")
-            #     print(i, query)
+            if i % 10 == 0:
+                print("QUERY", i)
+            query = query.astype(np.float32)
             res = self.query_object.find_nearest_neighbor(query, filters[i].indices)
             self.I[i] = res
 
@@ -46,7 +46,7 @@ class FALCONN(BaseFilterANN):
         ds = DATASETS[dataset]()
         self.dataset = ds.get_dataset()
         manager = multiprocessing.Manager()
-        self.dataset.astype(np.float32)
+        self.dataset = self.dataset.astype(np.float32)
         # self.dataset /= np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
         dataset_metadata = ds.get_dataset_metadata()
         metadata_dic = manager.dict()
@@ -67,12 +67,12 @@ class FALCONN(BaseFilterANN):
             for point in metadata_slice:
                     if ((i-start) % increments == 0):
                         print("METADATA PROGRESS FOR WORKER ", worker_id, ": ", ((i-start)/increments) * 10, "%", sep="")
-                        print("Inverse Metadata Size, on worker ", worker_id, ": ", len(inverse_metadata), sep="", end="\n\n")
+                        # print("Inverse Metadata Size, on worker ", worker_id, ": ", len(inverse_metadata), sep="", end="\n\n")
                     for filter_idx in point.indices:
                         int_filter_idx = int(filter_idx)
-                        if int_filter_idx not in inverse_metadata:
-                            inverse_metadata[int_filter_idx] = list()
-                        inverse_metadata[int(filter_idx)].append(i)
+                        # if int_filter_idx not in inverse_metadata:
+                        #     inverse_metadata[int_filter_idx] = list()
+                        # inverse_metadata[int(filter_idx)].append(i)
                         if i not in metadata_dic:
                             metadata_dic[i] = set()
                         metadata_dic[i].add(int(filter_idx))
@@ -130,7 +130,7 @@ class FALCONN(BaseFilterANN):
                 small_labels[k] = v
 
         print(len(small_labels))
-        table.setup(self.dataset, self.metadata_dic, small_labels)
+        table.setup(dataset, metadata_dic, small_labels)
         t2 = timeit.default_timer()
         print('Done')
         print('Construction time: {}'.format(t2 - t1))
