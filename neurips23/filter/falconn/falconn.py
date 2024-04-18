@@ -49,7 +49,7 @@ class FALCONN(BaseFilterANN):
         # self.dataset = self.dataset.astype(np.float32)
         # self.dataset /= np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
         self.dataset_metadata = ds.get_dataset_metadata()
-        metadata_dic = defaultdict(set)
+        metadata_dic = defaultdict(list)
         inverse_metadata = defaultdict(list)
 
         # breakpoint()
@@ -75,7 +75,7 @@ class FALCONN(BaseFilterANN):
                     # inverse_metadata[int(filter_idx)].append(i)
                     # if i not in metadata_dic:
                     #     metadata_dic[i] = set()
-                    metadata_dic[i].add(int_filter_idx)
+                    metadata_dic[i].append(int_filter_idx)
                 i += 1
         print("METADATA PROGRESS FOR WORKER ", worker_id, ": 100%", sep="")
 
