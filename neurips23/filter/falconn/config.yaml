@@ -1,6 +1,6 @@
 random-filter-s:
     falconn:
-      docker-tag: falconn
+      docker-tag: neurips23-filter-falconn
       module: neurips23.filter.falconn.falconn
       constructor: FALCONN
       base-args: ["@metric"]
@@ -22,7 +22,7 @@ random-filter-s:
             ]
 random-filter-yfcc:
     falconn:
-      docker-tag: falconn
+      docker-tag: neurips23-filter-falconn
       module: neurips23.filter.falconn.falconn
       constructor: FALCONN
       base-args: ["@metric"]
@@ -44,7 +44,7 @@ random-filter-yfcc:
             ]
 yfcc-10M:
     falconn:
-      docker-tag: falconn
+      docker-tag: neurips23-filter-falconn
       module: neurips23.filter.falconn.falconn
       constructor: FALCONN
       base-args: ["@metric"]
