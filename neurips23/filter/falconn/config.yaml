@@ -11,13 +11,35 @@ random-filter-s:
           query-args: |
             [
               {
-                "nprobe": 50
+                "nprobe": 100
               },
               {
-                "nprobe": 75
+                "nprobe": 125
               },
+              {
+                "nprobe": 150
+              }
+            ]
+random-filter-yfcc:
+    falconn:
+      docker-tag: falconn
+      module: neurips23.filter.falconn.falconn
+      constructor: FALCONN
+      base-args: ["@metric"]
+      run-groups:
+        base:
+          args: |
+            [{"indexkey": "IVF1024,SQ8"}]
+          query-args: |
+            [
               {
                 "nprobe": 100
+              },
+              {
+                "nprobe": 125
+              },
+              {
+                "nprobe": 150
               }
             ]
 yfcc-10M:
