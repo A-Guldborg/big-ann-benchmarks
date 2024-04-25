@@ -25,9 +25,10 @@ class FALCONN(BaseFilterANN):
         self.index_params = index_params
 
     def filtered_query(self, X, filter, k):
+        self.X = X.astype(np.float32)
         # self.X = (X / self.norm) - self.center
-        self.X = X / np.linalg.norm(X, axis=1).reshape(-1, 1)
-        self.X = self.X - self.center
+        # self.X = X / np.linalg.norm(X, axis=1).reshape(-1, 1)
+        self.X -= self.center
         # print("filtered")
         # print(X)
         nq = self.X.shape[0]
@@ -48,9 +49,9 @@ class FALCONN(BaseFilterANN):
         ds = DATASETS[dataset]()
         self.dataset = ds.get_dataset()
         # manager = multiprocessing.Manager()
-        # self.dataset = self.dataset.astype(np.float32)
-        self.norm = np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
-        self.dataset = self.dataset / self.norm
+        self.dataset = self.dataset.astype(np.float32)
+        # self.norm = np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
+        # self.dataset = self.dataset / self.norm
         self.dataset_metadata = ds.get_dataset_metadata()
         metadata_dic = defaultdict(list)
         inverse_metadata = defaultdict(list)
