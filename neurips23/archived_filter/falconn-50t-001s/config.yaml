@@ -1,0 +1,50 @@
+random-filter-s:
+    falconn-50t-001s:
+      docker-tag: falconn
+      module: neurips23.filter.falconn-100t-001.falconn
+      constructor: FALCONN
+      base-args: ["@metric"]
+      run-groups:
+        base:
+          args: |
+            [{"indexkey": "IVF1024,SQ8"}]
+          query-args: |
+            [
+              {
+                "nprobe": 100
+              },
+              {
+                "nprobe": 200
+              },
+              {
+                "nprobe": 400
+              },
+              {
+                "nprobe": 600
+              }
+            ]
+yfcc-10M:
+    falconn-50t-001s:
+      docker-tag: falconn
+      module: neurips23.filter.falconn-100t-001.falconn
+      constructor: FALCONN
+      base-args: ["@metric"]
+      run-groups:
+        base:
+          args: |
+            [{"indexkey": "IVF1024,SQ8"}]
+          query-args: |
+            [
+              {
+                "nprobe": 100
+              },
+              {
+                "nprobe": 200
+              },
+              {
+                "nprobe": 400
+              },
+              {
+                "nprobe": 600
+              }
+            ]
