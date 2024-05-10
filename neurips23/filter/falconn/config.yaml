@@ -9,6 +9,8 @@ yfcc-10M:
           args: |
             [
               {
+                "tables": 5,
+                "sl_threshold": 0.0001,
                 "iterations": 1
               }
             ]
@@ -34,6 +36,89 @@ yfcc-10M:
           args: |
             [
               {
+                "tables": 5,
+                "sl_threshold": 0.0001,
+                "iterations": 5
+              }
+            ]
+          query-args: |
+            [
+              {
+                "nprobe": 5
+              },
+              {
+                "nprobe": 10
+              },
+              {
+                "nprobe": 20
+              }
+            ]
+    falconn-5t-0001s-20i:
+      docker-tag: falconn
+      module: neurips23.filter.falconn.falconn
+      constructor: FALCONN
+      base-args: ["@metric"]
+      run-groups:
+        base:
+          args: |
+            [
+              {
+                "tables": 5,
+                "sl_threshold": 0.0001,
+                "iterations": 20
+              }
+            ]
+          query-args: |
+            [
+              {
+                "nprobe": 5
+              },
+              {
+                "nprobe": 10
+              },
+              {
+                "nprobe": 20
+              }
+            ]
+    falconn-10t-0001s-1i:
+      docker-tag: falconn
+      module: neurips23.filter.falconn.falconn
+      constructor: FALCONN
+      base-args: ["@metric"]
+      run-groups:
+        base:
+          args: |
+            [
+              {
+                "tables": 10,
+                "sl_threshold": 0.0001,
+                "iterations": 1
+              }
+            ]
+          query-args: |
+            [
+              {
+                "nprobe": 5
+              },
+              {
+                "nprobe": 10
+              },
+              {
+                "nprobe": 20
+              }
+            ]
+    falconn-10t-0001s-5i:
+      docker-tag: falconn
+      module: neurips23.filter.falconn.falconn
+      constructor: FALCONN
+      base-args: ["@metric"]
+      run-groups:
+        base:
+          args: |
+            [
+              {
+                "tables": 10,
+                "sl_threshold": 0.0001,
                 "iterations": 5
               }
             ]

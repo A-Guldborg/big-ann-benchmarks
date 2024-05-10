@@ -24,6 +24,8 @@ class FALCONN(BaseFilterANN):
         self.metric = metric
         self.index_params = index_params
         self.iterations = index_params.get("iterations")
+        self.tables = index_params.get("tables")
+        self.sl_threshold = index_params.get("sl_threshold")
 
     def filtered_query(self, X, filters, k):
         self.X = X / np.linalg.norm(X, axis=1).reshape(-1,1)
@@ -104,7 +106,7 @@ class FALCONN(BaseFilterANN):
         params_cp.dimension = len(self.dataset[0])
         params_cp.lsh_family = falconn.LSHFamily.CrossPolytope
         params_cp.distance_function = falconn.DistanceFunction.EuclideanSquared
-        params_cp.l = 5
+        params_cp.l = self.tables
         # we set one rotation, since the data is dense enough,
         # for sparse data set it to 2
         params_cp.num_rotations = 1
@@ -122,7 +124,7 @@ class FALCONN(BaseFilterANN):
         table = falconn.LSHIndex(params_cp)
 
 
-        SMALL_LABEL_THRESHOLD = 0.0001
+        SMALL_LABEL_THRESHOLD = self.sl_threshold
         filter_size_threshold = int(SMALL_LABEL_THRESHOLD * self.dataset_metadata.shape[0])
 
         small_labels = {}
