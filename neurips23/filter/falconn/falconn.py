@@ -24,6 +24,7 @@ class FALCONN(BaseFilterANN):
         self.metric = metric
         self.index_params = index_params
         self.indexkey = index_params.get("indexkey")
+        self.iterations = index_params.get("iterations")
 
     def filtered_query(self, X, filters, k):
         self.X = X / np.linalg.norm(X, axis=1).reshape(-1,1)
@@ -36,7 +37,7 @@ class FALCONN(BaseFilterANN):
             if i % 10 == 0:
                 print("QUERY", i)
             # query = query.astype(np.float32)
-            res = self.query_object.find_nearest_neighbor(query, filters[i].indices, 5)
+            res = self.query_object.find_nearest_neighbor(query, filters[i].indices, self.iterations)
             self.I[i] = res
 
     def get_results(self):
