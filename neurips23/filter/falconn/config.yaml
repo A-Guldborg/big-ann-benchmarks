@@ -11,7 +11,7 @@ random-filter-s:
               {
                 "indexkey": "IVF1024,SQ8",
                 "iterations": 1
-              },
+              }
             ]
           query-args: |
             [
@@ -37,7 +37,7 @@ random-filter-s:
               {
                 "indexkey": "IVF1024,SQ8",
                 "iterations": 5
-              },
+              }
             ]
           query-args: |
             [
