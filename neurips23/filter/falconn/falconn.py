@@ -23,7 +23,6 @@ class FALCONN(BaseFilterANN):
     def __init__(self, metric, index_params):
         self.metric = metric
         self.index_params = index_params
-        self.indexkey = index_params.get("indexkey")
         self.iterations = index_params.get("iterations")
 
     def filtered_query(self, X, filters, k):
@@ -152,4 +151,4 @@ class FALCONN(BaseFilterANN):
             self.nprobe = 1
 
     def __str__(self):
-        return f'Falconn-5t-0.0001s-1i({self.indexkey}, {self.qas})'
+        return f'Falconn-({self.index_params}, {self.qas})'

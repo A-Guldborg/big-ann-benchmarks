@@ -1,4 +1,4 @@
-random-filter-s:
+yfcc-10M:
     falconn-5t-0001s-1i:
       docker-tag: falconn
       module: neurips23.filter.falconn.falconn
@@ -9,7 +9,6 @@ random-filter-s:
           args: |
             [
               {
-                "indexkey": "IVF1024,SQ8",
                 "iterations": 1
               }
             ]
@@ -35,7 +34,6 @@ random-filter-s:
           args: |
             [
               {
-                "indexkey": "IVF1024,SQ8",
                 "iterations": 5
               }
             ]
@@ -52,25 +50,3 @@ random-filter-s:
               }
             ]
 
-yfcc-10M:
-    falconn-5t-0001s-1i:
-      docker-tag: falconn
-      module: neurips23.filter.falconn-5t-0001s-1i.falconn
-      constructor: FALCONN
-      base-args: ["@metric"]
-      run-groups:
-        base:
-          args: |
-            [{"indexkey": "IVF1024,SQ8"}, {"indexkey": "blabla"}]
-          query-args: |
-            [
-              {
-                "nprobe": 5
-              },
-              {
-                "nprobe": 10
-              },
-              {
-                "nprobe": 20
-              }
-            ]
