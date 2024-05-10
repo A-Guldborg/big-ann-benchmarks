@@ -1,7 +1,7 @@
 random-filter-s:
     falconn-5t-0001s-1i:
       docker-tag: falconn
-      module: neurips23.filter.falconn-5t-0001s-1i.falconn
+      module: neurips23.filter.falconn.falconn
       constructor: FALCONN
       base-args: ["@metric"]
       run-groups:
@@ -27,7 +27,7 @@ random-filter-s:
             ]
     falconn-5t-0001s-5i:
       docker-tag: falconn
-      module: neurips23.filter.falconn-5t-0001s-5i.falconn
+      module: neurips23.filter.falconn.falconn
       constructor: FALCONN
       base-args: ["@metric"]
       run-groups:
