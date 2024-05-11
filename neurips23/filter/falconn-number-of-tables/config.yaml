@@ -1,0 +1,85 @@
+yfcc-10M:
+  falconn-5t-0001s-1i:
+    docker-tag: falconn
+    module: neurips23.filter.falconn.falconn
+    constructor: FALCONN
+    base-args: ["@metric"]
+    run-groups:
+      base:
+        args: |
+          [
+            {
+              "tables": 5,
+              "sl_threshold": 0.0001,
+              "iterations": 1,
+              "normalize": false
+            }
+          ]
+        query-args: |
+          [
+            {
+              "nprobe": 100
+            },
+            {
+              "nprobe": 150
+            },
+            {
+              "nprobe": 200
+            }
+          ]
+  falconn-20t-0001s-1i:
+    docker-tag: falconn
+    module: neurips23.filter.falconn.falconn
+    constructor: FALCONN
+    base-args: ["@metric"]
+    run-groups:
+      base:
+        args: |
+          [
+            {
+              "tables": 20,
+              "sl_threshold": 0.0001,
+              "iterations": 1,
+              "normalize": false
+            }
+          ]
+        query-args: |
+          [
+            {
+              "nprobe": 100
+            },
+            {
+              "nprobe": 150
+            },
+            {
+              "nprobe": 200
+            }
+          ]
+  falconn-100t-0001s-1i:
+    docker-tag: falconn
+    module: neurips23.filter.falconn.falconn
+    constructor: FALCONN
+    base-args: ["@metric"]
+    run-groups:
+      base:
+        args: |
+          [
+            {
+              "tables": 100,
+              "sl_threshold": 0.0001,
+              "iterations": 1,
+              "normalize": false
+            }
+          ]
+        query-args: |
+          [
+            {
+              "nprobe": 100
+            },
+            {
+              "nprobe": 150
+            },
+            {
+              "nprobe": 200
+            }
+          ]

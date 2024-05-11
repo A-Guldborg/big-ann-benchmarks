@@ -26,16 +26,20 @@ class FALCONN(BaseFilterANN):
         self.iterations = index_params.get("iterations")
         self.tables = index_params.get("tables")
         self.sl_threshold = index_params.get("sl_threshold")
+        self.normalize = index_params.get("normalize")
 
     def filtered_query(self, X, filters, k):
-        self.X = X / np.linalg.norm(X, axis=1).reshape(-1,1)
+        if self.normalize:
+            self.X = X / np.linalg.norm(X, axis=1).reshape(-1,1)
+        else:
+             self.X = X.astype(np.float32)
         self.X = self.X - self.center
         # print("filtered")
         # print(X)
         nq = self.X.shape[0]
         self.I = -np.ones((nq, k), dtype='int32')
         for (i, query) in enumerate(self.X):
-            if i % 10 == 0:
+            if i % 1000 == 0:
                 print("QUERY", i)
             # query = query.astype(np.float32)
             res = self.query_object.find_nearest_neighbor(query, filters[i].indices, self.iterations)
@@ -51,7 +55,10 @@ class FALCONN(BaseFilterANN):
         self.dataset = ds.get_dataset()
         # manager = multiprocessing.Manager()
         # self.dataset = self.dataset.astype(np.float32)
-        self.dataset = self.dataset / np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
+        if self.normalize:
+            self.dataset = self.dataset / np.linalg.norm(self.dataset, axis=1).reshape(-1, 1)
+        else:
+            self.dataset = self.dataset.astype(np.float32)
         self.dataset_metadata = ds.get_dataset_metadata()
         metadata_dic = defaultdict(list)
         inverse_metadata = defaultdict(list)
