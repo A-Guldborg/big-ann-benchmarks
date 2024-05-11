@@ -1,137 +1,320 @@
 yfcc-10M:
-    falconn-5t-0001s-1i:
-      docker-tag: falconn
-      module: neurips23.filter.falconn.falconn
-      constructor: FALCONN
-      base-args: ["@metric"]
-      run-groups:
-        base:
-          args: |
-            [
-              {
-                "tables": 5,
-                "sl_threshold": 0.0001,
-                "iterations": 1
-              }
-            ]
-          query-args: |
-            [
-              {
-                "nprobe": 5
-              },
-              {
-                "nprobe": 10
-              },
-              {
-                "nprobe": 20
-              }
-            ]
-    falconn-5t-0001s-5i:
-      docker-tag: falconn
-      module: neurips23.filter.falconn.falconn
-      constructor: FALCONN
-      base-args: ["@metric"]
-      run-groups:
-        base:
-          args: |
-            [
-              {
-                "tables": 5,
-                "sl_threshold": 0.0001,
-                "iterations": 5
-              }
-            ]
-          query-args: |
-            [
-              {
-                "nprobe": 5
-              },
-              {
-                "nprobe": 10
-              },
-              {
-                "nprobe": 20
-              }
-            ]
-    falconn-5t-0001s-20i:
-      docker-tag: falconn
-      module: neurips23.filter.falconn.falconn
-      constructor: FALCONN
-      base-args: ["@metric"]
-      run-groups:
-        base:
-          args: |
-            [
-              {
-                "tables": 5,
-                "sl_threshold": 0.0001,
-                "iterations": 20
-              }
-            ]
-          query-args: |
-            [
-              {
-                "nprobe": 5
-              },
-              {
-                "nprobe": 10
-              },
-              {
-                "nprobe": 20
-              }
-            ]
-    falconn-10t-0001s-1i:
-      docker-tag: falconn
-      module: neurips23.filter.falconn.falconn
-      constructor: FALCONN
-      base-args: ["@metric"]
-      run-groups:
-        base:
-          args: |
-            [
-              {
-                "tables": 10,
-                "sl_threshold": 0.0001,
-                "iterations": 1
-              }
-            ]
-          query-args: |
-            [
-              {
-                "nprobe": 5
-              },
-              {
-                "nprobe": 10
-              },
-              {
-                "nprobe": 20
-              }
-            ]
-    falconn-10t-0001s-5i:
-      docker-tag: falconn
-      module: neurips23.filter.falconn.falconn
-      constructor: FALCONN
-      base-args: ["@metric"]
-      run-groups:
-        base:
-          args: |
-            [
-              {
-                "tables": 10,
-                "sl_threshold": 0.0001,
-                "iterations": 5
-              }
-            ]
-          query-args: |
-            [
-              {
-                "nprobe": 5
-              },
-              {
-                "nprobe": 10
-              },
-              {
-                "nprobe": 20
-              }
-            ]
-
+    # Iterative probing tests
+     falconn-5t-0001s-1i:
+       docker-tag: falconn
+       module: neurips23.filter.falconn.falconn
+       constructor: FALCONN
+       base-args: ["@metric"]
+       run-groups:
+         base:
+           args: |
+             [
+               {
+                 "tables": 5,
+                 "sl_threshold": 0.0001,
+                 "iterations": 1
+               }
+             ]
+           query-args: |
+             [
+               #{
+               #  "nprobe": 10
+               #},
+               {
+                 "nprobe": 15
+               }
+               #{
+               #  "nprobe": 20
+               #}
+             ]
+    #    falconn-5t-0001s-5i:
+    #      docker-tag: falconn
+    #      module: neurips23.filter.falconn.falconn
+    #      constructor: FALCONN
+    #      base-args: ["@metric"]
+    #      run-groups:
+    #        base:
+    #          args: |
+    #            [
+    #              {
+    #                "tables": 5,
+    #                "sl_threshold": 0.0001,
+    #                "iterations": 5
+    #              }
+    #            ]
+    #          query-args: |
+    #            [
+    #              {
+    #                "nprobe": 10
+    #              },
+    #              {
+    #                "nprobe": 15
+    #              },
+    #              {
+    #                "nprobe": 20
+    #              }
+    #            ]
+    #    falconn-5t-0001s-20i:
+    #      docker-tag: falconn
+    #      module: neurips23.filter.falconn.falconn
+    #      constructor: FALCONN
+    #      base-args: ["@metric"]
+    #      run-groups:
+    #        base:
+    #          args: |
+    #            [
+    #              {
+    #                "tables": 5,
+    #                "sl_threshold": 0.0001,
+    #                "iterations": 20
+    #              }
+    #            ]
+    #          query-args: |
+    #            [
+    #              {
+    #                "nprobe": 10
+    #              },
+    #              {
+    #                "nprobe": 15
+    #              },
+    #              {
+    #                "nprobe": 20
+    #              }
+    #            ]
+    #    falconn-10t-0001s-1i:
+    #      docker-tag: falconn
+    #      module: neurips23.filter.falconn.falconn
+    #      constructor: FALCONN
+    #      base-args: ["@metric"]
+    #      run-groups:
+    #        base:
+    #          args: |
+    #            [
+    #              {
+    #                "tables": 10,
+    #                "sl_threshold": 0.0001,
+    #                "iterations": 1
+    #              }
+    #            ]
+    #          query-args: |
+    #            [
+    #              {
+    #                "nprobe": 10
+    #              },
+    #              {
+    #                "nprobe": 15
+    #              },
+    #              {
+    #                "nprobe": 20
+    #              }
+    #            ]
+    #    falconn-10t-0001s-5i:
+    #      docker-tag: falconn
+    #      module: neurips23.filter.falconn.falconn
+    #      constructor: FALCONN
+    #      base-args: ["@metric"]
+    #      run-groups:
+    #        base:
+    #          args: |
+    #            [
+    #              {
+    #                "tables": 10,
+    #                "sl_threshold": 0.0001,
+    #                "iterations": 5
+    #              }
+    #            ]
+    #          query-args: |
+    #            [
+    #              {
+    #                "nprobe": 10
+    #              },
+    #              {
+    #                "nprobe": 15
+    #              },
+    #              {
+    #                "nprobe": 20
+    #              }
+    #            ]
+    # Iterative probing v2
+    #    falconn-5t-0001s-1i:
+    #      docker-tag: falconn
+    #      module: neurips23.filter.falconn.falconn
+    #      constructor: FALCONN
+    #      base-args: ["@metric"]
+    #      run-groups:
+    #        base:
+    #          args: |
+    #            [
+    #              {
+    #                "tables": 5,
+    #                "sl_threshold": 0.0001,
+    #                "iterations": 1
+    #              }
+    #            ]
+    #          query-args: |
+    #            [
+    #              {
+    #                "nprobe": 5
+    #              },
+    #              {
+    #                "nprobe": 10
+    #              }
+    #            ]
+            #    falconn-5t-0001s-2i:
+            #      docker-tag: falconn
+            #      module: neurips23.filter.falconn.falconn
+            #      constructor: FALCONN
+            #      base-args: ["@metric"]
+            #      run-groups:
+            #        base:
+            #          args: |
+            #            [
+            #              {
+            #                "tables": 5,
+            #                "sl_threshold": 0.0001,
+            #                "iterations": 2
+            #              }
+            #            ]
+            #          query-args: |
+            #            [
+            #              {
+            #                "nprobe": 5
+            #              },
+            #              {
+            #                "nprobe": 10
+            #              }
+            #            ]
+            #  falconn-5t-0001s-3i:
+            #      docker-tag: falconn
+            #      module: neurips23.filter.falconn.falconn
+            #      constructor: FALCONN
+            #      base-args: ["@metric"]
+            #      run-groups:
+            #        base:
+            #          args: |
+            #            [
+            #              {
+            #                "tables": 5,
+            #                "sl_threshold": 0.0001,
+            #                "iterations": 3
+            #              }
+            #            ]
+            #          query-args: |
+            #            [
+            #              {
+            #                "nprobe": 5
+            #              },
+            #              {
+            #                "nprobe": 10
+            #              }
+            #            ]
+  # Small labels threshold
+    #    falconn-100t-001s-1i:
+    #      docker-tag: falconn
+    #      module: neurips23.filter.falconn.falconn
+    #      constructor: FALCONN
+    #      base-args: ["@metric"]
+    #      run-groups:
+    #        base:
+    #          args: |
+    #            [
+    #              {
+    #                "tables": 100,
+    #                "sl_threshold": 0.001,
+    #                "iterations": 1
+    #              }
+    #            ]
+    #          query-args: |
+    #            [
+    #              {
+    #                "nprobe": 100
+    #              },
+    #              {
+    #                "nprobe": 150
+    #              },
+    #              {
+    #                "nprobe": 200
+    #              }
+    #            ]
+  # Number of tables
+    #    falconn-5t-001s-1i:
+    #      docker-tag: falconn
+    #      module: neurips23.filter.falconn.falconn
+    #      constructor: FALCONN
+    #      base-args: ["@metric"]
+    #      run-groups:
+    #        base:
+    #          args: |
+    #            [
+    #              {
+    #                "tables": 5,
+    #                "sl_threshold": 0.01,
+    #                "iterations": 1
+    #              }
+    #            ]
+    #          query-args: |
+    #            [
+    #              {
+    #                "nprobe": 100
+    #              },
+    #              {
+    #                "nprobe": 150
+    #              },
+    #              {
+    #                "nprobe": 200
+    #              }
+    #            ]
+    # falconn-20t-001s-1i:
+    #     docker-tag: falconn
+    #     module: neurips23.filter.falconn.falconn
+    #     constructor: FALCONN
+    #     base-args: ["@metric"]
+    #     run-groups:
+    #       base:
+    #         args: |
+    #           [
+    #             {
+    #               "tables": 20,
+    #               "sl_threshold": 0.01,
+    #               "iterations": 1
+    #             }
+    #           ]
+    #         query-args: |
+    #           [
+    #             {
+    #               "nprobe": 100
+    #             },
+    #             {
+    #               "nprobe": 150
+    #             },
+    #             {
+    #               "nprobe": 200
+    #             }
+    #           ]
+    #   falconn-100t-001s-1i:
+    #     docker-tag: falconn
+    #     module: neurips23.filter.falconn.falconn
+    #     constructor: FALCONN
+    #     base-args: ["@metric"]
+    #     run-groups:
+    #       base:
+    #         args: |
+    #           [
+    #             {
+    #               "tables": 100,
+    #               "sl_threshold": 0.01,
+    #               "iterations": 1
+    #             }
+    #           ]
+    #         query-args: |
+    #           [
+    #             {
+    #               "nprobe": 100
+    #             },
+    #             {
+    #               "nprobe": 150
+    #             },
+    #             {
+    #               "nprobe": 200
+    #             }
+    #           ]
