@@ -22,7 +22,10 @@ def compute_recall_with_distance_ties(true_ids, true_dists, run_ids, count):
         # nothing fancy to do in this case
         recall =  len(set(true_ids[:count]) & set(run_ids))
 
+    if gt_size != count:
+        print("DEBUG:", true_ids, run_ids, set(true_ids) & set(run_ids))
     else:
+        # if len(true_ids) == count:
         dist_tie_check = true_dists[count-1] # tie check anchored at count-1 in GT dists
      
         set_end = gt_size
